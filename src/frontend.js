@@ -12,9 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailedAnswerButton = document.getElementById('detailed-answer-button');
         const llmResponseContent = document.getElementById('llm-response-content');
         const apiResponseTimeElement = document.getElementById('api-response-time');
+        const modelUsedElement = document.getElementById('model-used');
         const detailedResponse = document.getElementById('detailed-response');
         const detailedLlmResponseContent = document.getElementById('detailed-llm-response-content');
         const detailedApiResponseTime = document.getElementById('detailed-api-response-time');
+        const detailedModelUsedElement = document.getElementById('detailed-model-used');
 
 
         return {
@@ -28,9 +30,11 @@ document.addEventListener('DOMContentLoaded', () => {
             detailedAnswerButton,
             llmResponseContent,
             apiResponseTimeElement,
+            modelUsedElement,
             detailedResponse,
             detailedLlmResponseContent,
-            detailedApiResponseTime
+            detailedApiResponseTime,
+            detailedModelUsedElement
         };
     })();
 
@@ -68,9 +72,11 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * FUNC - Displays the API response time.
          * @param {number} time - The time taken for the API response in milliseconds.
+         * @param {string} modelName - The name of the model used.
          */
-        const displayApiResponseTime = (time) => {
+        const displayApiResponseTime = (time, modelName) => {
             elements.apiResponseTimeElement.textContent = `Answered in: ${time.toFixed(2)} ms`;
+            elements.modelUsedElement.textContent = `Model used: ${modelName}`;
         };
 
         /**
@@ -111,8 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.detailedLlmResponseContent.innerHTML = htmlContent;
         };
 
-        const displayDetailedApiResponseTime = (time) => {
+        const displayDetailedApiResponseTime = (time, modelName) => {
             elements.detailedApiResponseTime.textContent = `Answered in: ${time.toFixed(2)} ms`;
+            elements.detailedModelUsedElement.textContent = `Model used: ${modelName}`;
         };
 
         return {
@@ -186,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     lastLLMResponse = data.response;
 
                     ui.displayLLMResponse(data.response);
-                    ui.displayApiResponseTime(apiResponseTime);
+                    ui.displayApiResponseTime(apiResponseTime, data.modelName);
 
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -232,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const apiResponseTime = endTime - startTime;
 
                         ui.displayDetailedLLMResponse(detailedData.response);
-                        ui.displayDetailedApiResponseTime(apiResponseTime);
+                        ui.displayDetailedApiResponseTime(apiResponseTime, detailedData.modelName);
                     } catch (error) {
                         console.error('Error fetching detailed data:', error);
                         // Optionally, display an error in the detailed response container

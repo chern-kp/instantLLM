@@ -124,7 +124,7 @@ const RequestProcessor = ((geminiService, responseHandler) => {
 
         const modelInstance = geminiService.createModel(currentModelName, currentSystemInstruction);
         const text = await geminiService.generateContent(finalQuery, modelInstance);
-        return responseHandler.success({ response: text });
+        return responseHandler.success({ response: text, modelName: currentModelName });
     };
 
     return {
