@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // ANCHOR - GeminiService module. Handles interaction with the Google Generative AI.
 const GeminiService = ((env) => {
     const DEFAULT_MODEL_NAME = 'gemini-2.5-flash-lite-preview-06-17';
-    const DEFAULT_SYSTEM_INSTRUCTION = 'You are InstantLLM, LLM based on Gemini 2.5 Flash Lite. User is going to act as you are a search engine, so you must act as one. Assume that all prompts are questions. Please keep your responses short.';
+    const DEFAULT_SYSTEM_INSTRUCTION = 'You are InstantLLM, LLM based on Gemini. User is going to act as you are a search engine, so you must act as one. Assume that all prompts are questions. Please keep your responses short.';
 
     const DETAILED_MODEL_NAME = 'gemini-2.5-flash-lite-preview-06-17'
     const DETAILED_SYSTEM_INSTRUCTION = 'You are a highly detailed and explicit assistant, providing comprehensive answers based on the user\'s previous query and your prior response. Be very detailed and explicit.';
@@ -105,7 +105,7 @@ const RequestProcessor = ((geminiService, responseHandler) => {
         // If we prompted for a detailed answer by using "Detailed answer" button, we need to use a different system instruction and model name.
         if (isDetailed) {
             currentSystemInstruction = geminiService.DETAILED_SYSTEM_INSTRUCTION;
-            currentModelName = geminiService.DETAILED_MODEL_NAME;
+            currentModelName = modelName || geminiService.DETAILED_MODEL_NAME;
             // If the last user prompt and LLM response are provided, we can use them to form the final query
             if (lastUserPrompt && lastLLMResponse) {
                 // In the text of the prompt we replace the {userPrompt} and {llmResponse} with the actual values.

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailedLlmResponseContent = document.getElementById('detailed-llm-response-content');
         const detailedApiResponseTime = document.getElementById('detailed-api-response-time');
         const detailedModelUsedElement = document.getElementById('detailed-model-used');
+        const searchSettingsModelSelect = document.getElementById('search-settings-model-select');
 
 
         return {
@@ -34,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
             detailedResponse,
             detailedLlmResponseContent,
             detailedApiResponseTime,
-            detailedModelUsedElement
+            detailedModelUsedElement,
+            searchSettingsModelSelect
         };
     })();
 
@@ -143,13 +145,17 @@ document.addEventListener('DOMContentLoaded', () => {
          * @param {boolean} [isDetailed] - Optional flag to request a detailed answer.
          * @param {string} [lastUserPrompt] - The last user prompt for detailed answers.
          * @param {string} [lastLLMResponse] - The last LLM response for detailed answers.
+         * @param {string} [modelName] - The name of the model to use.
          * @returns {Promise<object>} - A promise that resolves with the API response data.
          */
-        const generateContent = async (query, isDetailed = false, lastUserPrompt = null, lastLLMResponse = null) => {
+        const generateContent = async (query, isDetailed = false, lastUserPrompt = null, lastLLMResponse = null, modelName = null) => {
             const body = { query, isDetailed };
             if (isDetailed) {
                 body.lastUserPrompt = lastUserPrompt;
                 body.lastLLMResponse = lastLLMResponse;
+            }
+            if (modelName) {
+                body.modelName = modelName;
             }
 
             const response = await fetch('/api/generate', {
@@ -179,13 +185,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const performSearch = async () => {
             const query = dom.searchInput.value;
+            const selectedModel = dom.searchSettingsModelSelect.value;
+
             if (query) {
                 ui.activateSearchMode();
 
                 const startTime = performance.now(); // Start time for API call
 
                 try {
-                    const data = await api.generateContent(query);
+                    const data = await api.generateContent(query, false, null, null, selectedModel);
                     const endTime = performance.now(); // End time for API call
                     const apiResponseTime = endTime - startTime;
 
@@ -232,9 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     ui.showDetailedResponseContainer();
                     const startTime = performance.now();
+                    const selectedModel = dom.searchSettingsModelSelect.value;
 
                     try {
-                        const detailedData = await api.generateContent(null, true, lastUserPrompt, lastLLMResponse);
+                        const detailedData = await api.generateContent(null, true, lastUserPrompt, lastLLMResponse, selectedModel);
                         const endTime = performance.now();
                         const apiResponseTime = endTime - startTime;
 
@@ -242,7 +251,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         ui.displayDetailedApiResponseTime(apiResponseTime, detailedData.modelName);
                     } catch (error) {
                         console.error('Error fetching detailed data:', error);
-                        // Optionally, display an error in the detailed response container
                     }
                 });
             }

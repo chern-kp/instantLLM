@@ -176,6 +176,13 @@ body {
     color: var(--color-text-dark);
 }
 
+.search__settings-container {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-sm);
+}
+
 /* Load Time Element */
 .page__load-time {
     margin-top: var(--spacing-md);

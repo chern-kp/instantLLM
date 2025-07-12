@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
 </head>
+
 <body>
     <div class="page">
         <div class="header">
@@ -16,17 +18,31 @@
             <div class="search">
                 <div class="search__container">
                     <div class="search__icon-wrapper">
-                    <svg class="search__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <input id="search-input" class="search__input" type="text" placeholder="Prompt">
+                        <svg class="search__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input id="search-input" class="search__input" type="text" placeholder="Prompt">
 
-                <button id="search-button" class="search__button">
-                    <svg class="search__submit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </button>
+                    <button id="search-button" class="search__button">
+                        <svg class="search__submit-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </button>
+                </div>
+                <div id="search-settings-container" class="search__settings-container">
+                    <div class="search__settings-model">
+                        <label for="search-settings-model-label">Model</label>
+                        <select id="search-settings-model-select" class="search__settings-select-model">
+                            <option value="gemini-2.5-flash-lite-preview-06-17">Gemini 2.5 Flash Lite Preview 06-17</option>
+                            <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div id="load-time" class="page__load-time"></div>
@@ -52,4 +68,5 @@
     </div>
     <script src="frontend.js"></script>
 </body>
+
 </html>
