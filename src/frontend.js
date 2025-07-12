@@ -1,4 +1,6 @@
 // Code is wrapped in DOMContentLoaded listener to ensure DOM is fully loaded before executing any code
+import { models } from './models.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // ANCHOR - DOMHandler module. Responsible for getting all necessary DOM elements.
     const DOMHandler = (() => {
@@ -108,6 +110,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        /**
+         * FUNC - Populates the model selector dropdown with models from the models object.
+         */
+        const populateModelSelector = () => {
+            const selectElement = elements.searchSettingsModelSelect;
+            if (!selectElement) return;
+
+            selectElement.innerHTML = '';
+
+            for (const modelId in models) {
+                const option = document.createElement('option');
+                option.value = modelId;
+                option.textContent = modelId;
+                selectElement.appendChild(option);
+            }
+        };
+
         const showDetailedResponseContainer = () => {
             elements.detailedAnswerButton.style.display = 'none';
             elements.detailedResponse.style.display = 'block';
@@ -133,7 +152,8 @@ document.addEventListener('DOMContentLoaded', () => {
             displayPageLoadTime,
             showDetailedResponseContainer,
             displayDetailedLLMResponse,
-            displayDetailedApiResponseTime
+            displayDetailedApiResponseTime,
+            populateModelSelector
         };
     })(DOMHandler);
 
@@ -141,21 +161,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const APIService = (() => {
         /**
          * FUNC - Fetches a response from the API.
-         * @param {string} query - The user's query.
-         * @param {boolean} [isDetailed] - Optional flag to request a detailed answer.
-         * @param {string} [lastUserPrompt] - The last user prompt for detailed answers.
-         * @param {string} [lastLLMResponse] - The last LLM response for detailed answers.
-         * @param {string} [modelName] - The name of the model to use.
+         * @param {object} options - The options for the content generation.
+         * @param {string} [options.query] - The user's query.
+         * @param {boolean} [options.isDetailed=false] - Optional flag to request a detailed answer.
+         * @param {string} [options.lastUserPrompt] - The last user prompt for detailed answers.
+         * @param {string} [options.lastLLMResponse] - The last LLM response for detailed answers.
+         * @param {string} [options.modelId] - The ID of the model to use.
+         * @param {object} [options.modelData] - The data of the model to use.
          * @returns {Promise<object>} - A promise that resolves with the API response data.
          */
-        const generateContent = async (query, isDetailed = false, lastUserPrompt = null, lastLLMResponse = null, modelName = null) => {
+        const generateContent = async (options) => {
+            const {
+                query,
+                isDetailed = false,
+                lastUserPrompt = null,
+                lastLLMResponse = null,
+                modelId = null,
+                modelData = null
+            } = options;
+
             const body = { query, isDetailed };
             if (isDetailed) {
                 body.lastUserPrompt = lastUserPrompt;
                 body.lastLLMResponse = lastLLMResponse;
             }
-            if (modelName) {
-                body.modelName = modelName;
+            if (modelId && modelData) {
+                body.modelName = modelId;
+                body.modelData = modelData;
             }
 
             const response = await fetch('/api/generate', {
@@ -185,7 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const performSearch = async () => {
             const query = dom.searchInput.value;
-            const selectedModel = dom.searchSettingsModelSelect.value;
+            const selectedModelId = dom.searchSettingsModelSelect.value;
+            const selectedModelData = models[selectedModelId];
 
             if (query) {
                 ui.activateSearchMode();
@@ -193,7 +226,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const startTime = performance.now(); // Start time for API call
 
                 try {
-                    const data = await api.generateContent(query, false, null, null, selectedModel);
+                    const data = await api.generateContent({
+                        query,
+                        modelId: selectedModelId,
+                        modelData: selectedModelData
+                    });
                     const endTime = performance.now(); // End time for API call
                     const apiResponseTime = endTime - startTime;
 
@@ -223,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const init = () => {
+            ui.populateModelSelector();
+
             dom.searchButton.addEventListener('click', performSearch);
             dom.searchInput.addEventListener('keydown', (event) => {
                 if (event.key === 'Enter') {
@@ -240,10 +279,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     ui.showDetailedResponseContainer();
                     const startTime = performance.now();
-                    const selectedModel = dom.searchSettingsModelSelect.value;
+                    const selectedModelId = dom.searchSettingsModelSelect.value;
+                    const selectedModelData = models[selectedModelId];
 
                     try {
-                        const detailedData = await api.generateContent(null, true, lastUserPrompt, lastLLMResponse, selectedModel);
+                        const detailedData = await api.generateContent({
+                            isDetailed: true,
+                            lastUserPrompt,
+                            lastLLMResponse,
+                            modelId: selectedModelId,
+                            modelData: selectedModelData
+                        });
                         const endTime = performance.now();
                         const apiResponseTime = endTime - startTime;
 
