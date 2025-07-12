@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const modelId in models) {
                 const option = document.createElement('option');
                 option.value = modelId;
-                option.textContent = modelId;
+                option.textContent = models[modelId].display_text || modelId;
                 selectElement.appendChild(option);
             }
         };
