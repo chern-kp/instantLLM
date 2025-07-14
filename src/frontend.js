@@ -20,11 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailedApiResponseTime = document.getElementById('detailed-api-response-time');
         const detailedModelUsedElement = document.getElementById('detailed-model-used');
         const searchSettingsModelSelect = document.getElementById('search-settings-model-select');
+        const openSettingsButton = document.getElementById('search__under-bar__open-settings-button');
+        const searchSettingsContainer = document.getElementById('search-settings-container');
 
 
         return {
             searchInput,
             searchButton,
+            openSettingsButton,
+            searchSettingsContainer,
             page,
             header,
             responseWrapper,
@@ -59,8 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.detailedApiResponseTime.textContent = '';
             elements.detailedAnswerButton.style.display = 'inline';
             elements.responseWrapper.style.display = 'block';
-            elements.page.classList.add('page--search-active');
-            elements.header.classList.add('header--search-active');
+            elements.page.classList.add('search-active');
         };
 
         /**
@@ -69,8 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
          */
         const deactivateSearchMode = () => {
             elements.responseWrapper.style.display = 'none';
-            elements.page.classList.remove('page--search-active');
-            elements.header.classList.remove('header--search-active');
+            elements.page.classList.remove('search-active');
         };
 
         /**
@@ -108,6 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (elements.loadTimeElement) {
                 elements.loadTimeElement.textContent = `page loaded in: ${time.toFixed(2)} ms`;
             }
+        };
+
+        const toggleSettingsVisibility = () => {
+            elements.searchSettingsContainer.classList.toggle('search__settings-container--visible');
         };
 
         /**
@@ -153,7 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
             showDetailedResponseContainer,
             displayDetailedLLMResponse,
             displayDetailedApiResponseTime,
-            populateModelSelector
+            populateModelSelector,
+            toggleSettingsVisibility
         };
     })(DOMHandler);
 
@@ -267,6 +274,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (event.key === 'Enter') {
                     performSearch();
                 }
+            });
+
+            dom.openSettingsButton.addEventListener('click', () => {
+                ui.toggleSettingsVisibility();
             });
 
             if (dom.detailedAnswerButton) {

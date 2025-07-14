@@ -40,7 +40,7 @@ body {
     color: var(--color-text-primary);
 }
 
-/* Page Block */
+/* SECTION - Page Block */
 .page {
     display: flex;
     flex-direction: column;
@@ -50,28 +50,22 @@ body {
     transition: justify-content 0.3s ease-in-out;
 }
 
-.page--search-active {
+.search-active {
     justify-content: flex-start;
     padding-top: var(--spacing-md);
     min-height: unset;
     height: auto;
 }
 
-/* Header Block */
+/* SECTION - Search Block */
+
+/* SECTION - Header Block */
 .header {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     margin-bottom: var(--spacing-xxxl);
-}
-
-.header--search-active {
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-    gap: var(--spacing-lg);
-    margin-bottom: 0;
 }
 
 .header__title-link {
@@ -88,19 +82,26 @@ body {
     margin-top: 0;
 }
 
-.header--search-active .header__title {
-    font-size: var(--font-size-xl);
-    margin-bottom: 0.5rem; /* Adjust margin to align with search input bottom */
+/* SECTION - Header Block - Search Mode Active */
+.search-active .header {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--spacing-lg);
+    margin-bottom: 0;
 }
 
-/* Search Block */
+.search-active .header__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: 0.5rem;
+}
+/* !SECTION - Header Block - Search Mode Active */
+
+
 .search {
     width: 100%;
     max-width: 32rem;
-}
-
-.header--search-active .search {
-    max-width: 48rem; /* Wider search bar */
+    display: flex;
+    flex-direction: column;
 }
 
 .search__container {
@@ -176,25 +177,61 @@ body {
     color: var(--color-text-dark);
 }
 
-.search__settings-container {
+.search__under-bar-container {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: var(--spacing-sm);
+    padding: 0 var(--spacing-sm);
+}
+
+.search__under-bar__open-settings-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+}
+
+.search__under-bar__open-settings-button:hover {
+    color: var(--color-text-primary);
+}
+
+.search__settings-container {
+    display: none; /* Hidden by default */
     align-items: center;
     gap: var(--spacing-md);
     margin-top: var(--spacing-sm);
 }
 
-/* Load Time Element */
-.page__load-time {
-    margin-top: var(--spacing-md);
-    font-size: var(--font-size-md);
-    color: var(--color-text-secondary);
+.search__settings-container--visible {
+    display: flex;
 }
 
-.page--search-active .page__load-time {
-    display: none;
+/* SECTION - Search Block - Search Mode Active */
+
+.search-active .search {
+    max-width: 48rem;
 }
 
-/* Response Block */
+.search-active .search__main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-md);
+    align-items: center;
+}
+
+.search-active .search__bar-and-under-bar {
+    width: 100%;
+}
+
+/* !SECTION - Search Block - Search Mode Active */
+/* !SECTION - Search Block */
+/* !SECTION - Header Block */
+/* !SECTION - Page Block */
+
+/* SECTION - Response Block */
 #response-wrapper {
     display: none;
     width: 100%;
@@ -211,7 +248,7 @@ body {
     line-height: 1.6;
 }
 
-.page--search-active #response-wrapper {
+.search-active #response-wrapper {
     margin-top: var(--spacing-lg);
 }
 
@@ -258,8 +295,6 @@ body {
     border-radius: 0;
 }
 
-/* API Response Time Element (inside Response Block) */
-
 .response__footer {
     display: flex;
     align-items: center;
@@ -276,6 +311,8 @@ body {
     font-size: 0.8em;
     color: #888;
 }
+
+/* SECTION - API Response Time Element (inside Response Block) */
 
 .response__model-used {
     margin-right: auto;
@@ -296,7 +333,9 @@ body {
     color: var(--color-text-secondary);
 }
 
-/* Detailed Answer button*/
+/* !SECTION - API Response Time Element (inside Response Block) */
+
+/* SECTION - Detailed Answer button*/
 .detailed-answer-button {
     color: #3B82F6;
     text-decoration: none;
@@ -312,3 +351,18 @@ body {
     display: none;
     margin-top: var(--spacing-sm);
 }
+
+/* !SECTION - Detailed Answer button*/
+/* !SECTION - Response Block */
+
+/* SECTION - Reuseable Elements */
+/* ANCHOR - Load Time Element */
+.page__load-time {
+    font-size: var(--font-size-md);
+    color: var(--color-text-secondary);
+}
+
+.search-active .page__load-time {
+    display: none;
+}
+/* !SECTION - Reuseable Elements */
